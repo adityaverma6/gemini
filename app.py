@@ -301,10 +301,16 @@ if "doc_name" not in st.session_state:
 
 # ── Gemini Client ─────────────────────────────────────────────────────────────
 # Try Streamlit secrets first (cloud), fall back to .env (local)
+api_key = None
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
 except Exception:
     api_key = os.getenv("GEMINI_API_KEY")
+
+if not api_key:
+    st.error("⚠️ GEMINI_API_KEY not found. Please add it in **Settings → Secrets** on Streamlit Cloud, or in a `.env` file locally.")
+    st.stop()
+
 client = genai.Client(api_key=api_key)
 
 # ── Sidebar ──────────────────────────────────────────────────────────────────
