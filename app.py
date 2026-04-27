@@ -471,17 +471,19 @@ Question:
 Provide a thorough yet concise answer:"""
 
         with st.spinner("🧠 Thinking..."):
-            response = client.models.generate_content(
-                model="gemini-2.0-flash",
-                contents=prompt,
-            )
-
-        answer = response.text
-        st.session_state.history.append({
-            "question": question,
-            "answer": answer,
-        })
-        st.rerun()
+            try:
+                response = client.models.generate_content(
+                    model="gemini-2.0-flash",
+                    contents=prompt,
+                )
+                answer = response.text
+                st.session_state.history.append({
+                    "question": question,
+                    "answer": answer,
+                })
+                st.rerun()
+            except Exception as e:
+                st.error(f"❌ Gemini API error: {e}\n\nPlease check that your API key is valid and has no IP restrictions.")
 
     elif ask_clicked and not question:
         st.warning("Please type a question first.")
